@@ -192,7 +192,7 @@ def interface_factory():
     if choice == 1:
         sd = (800,600)
     elif choice == 2:
-        sd = (1300,700)
+        sd = (1200,700)
 
     print(" graph dimension \n 1 - 10x10 \n 2 - 20x20 \n 3 - 50x50 \n 4 - 60x60 \n 5 - 100x100 \n 6 - 200x200")
     choice = int(input())
