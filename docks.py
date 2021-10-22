@@ -1,5 +1,3 @@
-  getParent()
-
   setParent(parent)
 
 
@@ -8,9 +6,9 @@
   setAsInlist()
 
 
-  isExpanded()
+  isExpanded() # waht about 'wasEspanded()'
 
-  isInlist()
+  isInlist() # better replace it for a function in the search file
 
   isNew()
 

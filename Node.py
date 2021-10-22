@@ -45,7 +45,7 @@ class Node:
         return not (self.isExpanded() or self.isInlist())
 
     def isParent_of(self, node):
-        return node.getParent().getCell() == self.cell
+        return node.getParent() != None and node.getParent().getCell() == self.cell
 
     def isEqual(self,node):
         return self.cell == node.getCell()

@@ -117,9 +117,9 @@ class Interface:
             self.matrix.cell_click_check_for_start()
             self.state = STATE_CHOOSE_UNACCESSIBLE_CELS
 
-    def choose_unaccessible_cells(self, event):
+    def choose_unaccessible_accessible_cells(self, event):
         if self.left_mouse_click(event):
-            self.matrix.cell_click_check_for_unaccessible()
+            self.matrix.cell_click_check_for_unaccessible_or_acessible()
 
         elif self.right_mouse_click(event):
             self.matrix.line_draw()
@@ -133,11 +133,13 @@ class Interface:
 
     def choose_the_search(self):
         if self.print_axu :
-            print(" serch options \n 0 - ds \n 1 - ws \n ...")
+            print("Serch options:")
+            for key, value in search_dic.items():
+                print(f" {key} : {value[1]}")
             self.print_axu = False
 
         if self.number_key_press():
-            self.search = search_dic[self.pressed_number]
+            self.search = search_dic[self.pressed_number][0]
             self.state = STATE_RUN_THE_SEARCH
             self.print_axu = True
 
@@ -170,7 +172,7 @@ class Interface:
                 elif self.state == STATE_CHOOSE_THE_START_CELL:
                     self.choose_the_start_cell(event)
                 elif self.state == STATE_CHOOSE_UNACCESSIBLE_CELS:
-                    self.choose_unaccessible_cells(event)
+                    self.choose_unaccessible_accessible_cells(event)
                 elif self.state == STATE_CHOOSE_THE_SHEARC:
                     self.choose_the_search()
                 elif self.state == STATE_RUN_THE_SEARCH:
@@ -185,14 +187,14 @@ class Interface:
             self.updateScreen()
 
 def interface_factory():
-    print(" screen dimension \n 1 - 800x600 \n 2 - 1300x700 ")
+    print(" screen dimension \n 1 - 800x600 \n 2 - 1200x700 ")
     choice = int(input())
     if choice == 1:
         sd = (800,600)
     elif choice == 2:
-        sd = (1366,600)
+        sd = (1300,700)
 
-    print(" graph dimension \n 1 - 10x10 \n 2 - 20x20 \n 3 - 50x50 \n 4 - 100x100 \n 5 - 200x200")
+    print(" graph dimension \n 1 - 10x10 \n 2 - 20x20 \n 3 - 50x50 \n 4 - 60x60 \n 5 - 100x100 \n 6 - 200x200")
     choice = int(input())
     if choice == 1:
         gw = 10
@@ -204,9 +206,12 @@ def interface_factory():
         gw = 50
         gh = 50
     elif choice == 4:
+        gw = 60
+        gh = 60
+    elif choice == 5:
         gw = 100
         gh = 100
-    elif choice == 5:
+    elif choice == 6:
         gw = 200
         gh = 200
 

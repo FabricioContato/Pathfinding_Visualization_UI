@@ -17,7 +17,7 @@ BLACK = (0,0,0)
 OUTLINE_GRAY = (65,65,65)
 RED = (255,0,0)
 GREEN = (0,255,0)
-PINK = (255,0,255)
+ORANGE = (255,0,255)
 
 THICKNESS = 2
 
@@ -28,36 +28,18 @@ class Cell:
         self.surface = pygame.Surface(cell_dimension)
         self.rect = pygame.Rect(cell_point_place,cell_dimension)
         self.state = state
-        self.expanded_counter = 0
-        self.inList_counter = 0
-        #self.pastState = None
-        #self.visual_state = state
+        self.pastState = None
+        self.visual_state = state
         #self.visual_state_priority = []
-        #self.end_or_start = False
+        self.end_or_start = False
         self.matrix = matrix
         self.initSprite()
 
     def getState(self):
         return self.state
 
-    def expanded_counter_up(self):
-        self.expanded_counter = self.expanded_counter + 1
-
-    def inList_counter_up(self):
-        self.inList_counter = self.inList_counter + 1
-
-    def reset_couters(self):
-        self.expanded_counter = 0
-        self.inList_counter = 0
-
-    def getExpanded_counter(self):
-        return self.expanded_counter
-
-    def getInList_counter(self):
-        return self.inList_counter
-
-    #def getVisual_state(self):
-    #    return self.visual_state
+    def getVisual_state(self):
+        return self.visual_state
 
     def getRect(self):
         return self.rect
@@ -65,14 +47,14 @@ class Cell:
     def getCell_point_place(self):
         return self.cell_point_place
 
-    #def setEnd_or_start_as_true(self):
-    #    self.end_or_start = True
+    def setEnd_or_start_as_true(self):
+        self.end_or_start = True
 
-    #def setEnd_or_start_as_false(self):
-    #    self.end_or_start = False
+    def setEnd_or_start_as_false(self):
+        self.end_or_start = False
 
-    #def IsEnd_or_start(self):
-    #    return self.pastState == END or self.pastState == START
+    def IsEnd_or_start(self):
+        return self.pastState == END or self.pastState == START
 
     def getStateColor(self):
         state = self.state
@@ -91,78 +73,61 @@ class Cell:
         elif(state == IN_LIST):
             return LIGHT_BLUE
         elif(state == SELECTED):
-            return PINK
+            return ORANGE
 
     def initSprite(self):
         self.updateSprite()
 
     def updateSprite(self):
         self.surface.fill(self.getStateColor())
-        if self.isStateExpanded() and self.getExpanded_counter() > 1:
-            self.number_blit(self.getExpanded_counter())
-        elif self.isStateInlist() and self.getInList_counter() > 1:
-            self.number_blit(self.getInList_counter())
-
         self.line_square()
 
     def updateState(self, state):
-        if not (self.isStateEnd() or self.isStateStart()):
+        if self.isStateAccessible():
             self.state = state
-        else:
-            if state == ACCESSIBLE:
+            self.updateSprite()
+            self.updateMatrix()
+        elif self.isStateUnaccessible():
+            self.state = state
+            self.updateSprite()
+            self.updateMatrix()
+        elif self.isStateSelected():
+            self.state = state
+            self.updateSprite()
+            self.updateMatrix()
+        elif self.isStatePath():
+            self.state = state
+            self.updateSprite()
+            self.updateMatrix()
+        elif self.isStateInlist():
+            self.state = state
+            self.updateSprite()
+            self.updateMatrix()
+        elif self.isStateExpanded():
+            self.state = state
+            if state == ACCESSIBLE or state == PATH:
+                self.updateSprite()
+                self.updateMatrix()
+        elif self.isStateEnd():
+            if not (state == UNACCESSIBLE or state == SELECTED or state == IN_LIST):
                 self.state = state
+            if state == ACCESSIBLE :
+                self.updateSprite()
+                self.updateMatrix()
+        elif self.isStateStart():
+            if not (state == UNACCESSIBLE or state == SELECTED or state == IN_LIST):
+                self.state = state
+            if state == ACCESSIBLE :
+                self.updateSprite()
+                self.updateMatrix()
 
-        self.updateSprite()
-        self.updateMatrix()
-
-
-
-    #def updateState(self, state):
-        #if self.isStateAccessible():
-        #    self.state = state
-        #    self.updateSprite()
-        #    self.updateMatrix()
-        #elif self.isStateUnaccessible():
-        #    self.state = state
-        #    self.updateSprite()
-        #    self.updateMatrix()
-        #elif self.isStateSelected():
-        #    self.state = state
-        #    self.updateSprite()
-        #    self.updateMatrix()
-        #elif self.isStatePath():
-        #    self.state = state
-        #    self.updateMatrix()
-        #elif self.isStateInlist():
-        #    self.state = state
-        #    self.updateSprite()
-        #    self.updateMatrix()
-        #elif self.isStateExpanded():
-        #    self.state = state
-        #    if state == ACCESSIBLE or state == PATH:
-        #        self.updateSprite()
-        #        self.updateMatrix()
-        #elif self.isStateEnd():
-        #    if not (state == UNACCESSIBLE or state == SELECTED or state == IN_LIST):
-        #        self.state = state
-        #    if state == ACCESSIBLE :
-        #        self.updateSprite()
-        #        self.updateMatrix()
-        #elif self.isStateStart():
-        #    if not (state == UNACCESSIBLE or state == SELECTED or state == IN_LIST):
-        #        self.state = state
-        #    if state == ACCESSIBLE :
-        #        self.updateSprite()
-        #        self.updateMatrix()
-
-        #if self.state == START or self.state == END:
-        #    self.setEnd_or_start_as_true()
+        if self.state == START or self.state == END:
+            self.setEnd_or_start_as_true()
 
     def updateMatrix(self):
         self.matrix.updateSprite(self)
 
     def setStateAsAccessible(self):
-        self.reset_couters()
         self.updateState(ACCESSIBLE)
 
 
@@ -172,7 +137,6 @@ class Cell:
 
 
     def setStateAsExpanded(self):
-        self.expanded_counter_up()
         self.updateState(EXPANDED)
 
 
@@ -189,7 +153,6 @@ class Cell:
 
 
     def setStateAsInlist(self): #o que me encomoda é que como a cell start não ganha o status de IN_LIST ele será objeto de n nodes. Tudo bem quando isso ocorra para a cell end. Na verdade isso só me é um problema para buscas que procuram não adicionar na sua estrutura nodes cuja coordenada já foi expandida
-        self.inList_counter_up()
         self.updateState(IN_LIST)
 
 
@@ -220,11 +183,6 @@ class Cell:
 
     def isStateSelected(self):
         return self.state == SELECTED
-
-    def number_blit(self, number):
-        font = pygame.font.Font(None, 20)
-        text = font.render("{}".format(number), 1, PINK)
-        self.surface.blit(text, (5, 3))
 
     def line_square(self, color=OUTLINE_GRAY):
         surface = self.surface

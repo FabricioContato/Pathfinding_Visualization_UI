@@ -101,6 +101,16 @@ class Matrix:
 
         #self.blitCell(cell)
 
+    def cell_click_check_for_unaccessible_or_acessible(self):
+        point = pygame.mouse.get_pos()
+        j = point[0] // self.cell_width
+        i = point[1] // self.cell_height
+        cell = self.matrix[i][j]
+        if cell.isStateAccessible():
+            cell.setStateAsUnaccessible()
+        elif cell.isStateUnaccessible():
+            cell.setStateAsAccessible()
+
     def line_draw(self):
         if self.selected_cell == None :
             point = pygame.mouse.get_pos()
