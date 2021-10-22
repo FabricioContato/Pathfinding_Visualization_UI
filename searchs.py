@@ -20,7 +20,7 @@ def ds(graph, interface):
     while(stack):
 
         node = stack.pop()
-
+        print(graph.heuristic_euclidean_distance(node))
         if end_node.isEqual(node):
             print("end node found")
             return node

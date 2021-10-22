@@ -106,6 +106,7 @@ class Matrix:
         j = point[0] // self.cell_width
         i = point[1] // self.cell_height
         cell = self.matrix[i][j]
+        #print(self.heuristic_euclidean_distance2(cell))
         if cell.isStateAccessible():
             cell.setStateAsUnaccessible()
         elif cell.isStateUnaccessible():
@@ -163,6 +164,24 @@ class Matrix:
 
     def getEnd_node(self):
         return Node(self.end_cell)
+
+    def heuristic_euclidean_distance(self, node):
+        end_j = self.end_cell.getCell_point_place()[0] // self.cell_width
+        end_i = self.end_cell.getCell_point_place()[1] // self.cell_height
+        j = node.getCell().getCell_point_place()[0] // self.cell_width
+        i = node.getCell().getCell_point_place()[1] // self.cell_height
+
+        h = (abs(end_i - i)**2 + abs(end_j - j)**2)**0.5
+        return h
+
+    #def heuristic_euclidean_distance2(self, node):
+    #    end_j = self.end_cell.getCell_point_place()[0] // self.cell_width
+    #    end_i = self.end_cell.getCell_point_place()[1] // self.cell_height
+    #    j = node.getCell_point_place()[0] // self.cell_width
+    #    i = node.getCell_point_place()[1] // self.cell_height
+
+    #    h = (abs(end_i - i)**2 + abs(end_j - j)**2)**0.5
+    #    return h
 
     def get_neighbors(self,node):
         j = node.getCell().getCell_point_place()[0] // self.cell_width
