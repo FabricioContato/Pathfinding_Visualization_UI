@@ -222,7 +222,8 @@ class Cell:
         return self.state == SELECTED
 
     def number_blit(self, number):
-        font = pygame.font.Font(None, 20)
+        font_size = min(self.cell_dimension[0],self.cell_dimension[1])
+        font = pygame.font.Font(None, font_size)
         text = font.render("{}".format(number), 1, PINK)
         self.surface.blit(text, (5, 3))
 

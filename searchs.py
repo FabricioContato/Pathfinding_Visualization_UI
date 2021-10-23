@@ -20,7 +20,7 @@ def ds(graph, interface):
     while(stack):
 
         node = stack.pop()
-        print(graph.heuristic_euclidean_distance(node))
+
         if end_node.isEqual(node):
             print("end node found")
             return node
@@ -46,7 +46,7 @@ def ws(graph,interface):
     queue.append(start_node)
 
     while(queue):
-        #print("ds inside while")
+
         node = queue.pop(0)
 
         if end_node.isEqual(node):
@@ -56,7 +56,8 @@ def ws(graph,interface):
             node.setAsExpanded()
             neighbors_list = graph.get_neighbors(node)
             for neighbor in neighbors_list:
-                if neighbor.isNew():
+                #if neighbor.isNew():
+                if not neighbor.isParent_of(node):
                     neighbor.setParent(node)
                     neighbor.setAsInlist()
                     queue.append(neighbor)
