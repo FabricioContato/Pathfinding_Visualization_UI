@@ -5,6 +5,7 @@ class Node:
         self.cell = cell
        # self.coordinates = coordinates
         self.value = value
+        self.cost = 0
         self.name = ""
         self.parent = None
 
@@ -19,6 +20,12 @@ class Node:
 
     def getName(self):
         return self.name
+
+    def getCost(self):
+        return self.cost
+
+    def setCost(self,cost):
+        self.cost = cost
 
     def getParent(self):
         return self.parent
