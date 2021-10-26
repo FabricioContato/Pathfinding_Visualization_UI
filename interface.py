@@ -76,6 +76,8 @@ class Interface:
         return pygame.key.get_pressed()[pygame.K_9]
 
     def number_key_press(self):
+        self.pressed_number = None
+
         if self._0_key_press():
             self.pressed_number = 0
         elif self._1_key_press():
@@ -126,6 +128,9 @@ class Interface:
 
         elif self.f1_key_pess():
             self.matrix.random_unaccessible_cells()
+
+        elif self.number_key_press():
+            self.matrix.set_cost(self.pressed_number)
 
         elif self.enter_key_pess():
             self.state = STATE_CHOOSE_THE_SHEARC

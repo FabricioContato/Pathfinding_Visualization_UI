@@ -67,7 +67,20 @@ def ws(graph,interface):
     return None
 
 
+def aux_listPop(l):
+    n = l[0]
+    i = len(l)
+    for i_, n_ in enumerate(l):
+        if n_.getCost() > n.getCost():
+            i = i_
+            break
+    l_aux = l[0:i]
 
+    l_aux.sort(key=lambda n: sum([n.getCost(),-1 * n.getValue()]))
+
+    node = l_aux.pop(0)
+    l.remove(node)
+    return node
 
 def sc (graph,interface):
 
@@ -85,7 +98,9 @@ def sc (graph,interface):
     queue.append(start)
 
     while queue:
+        #node = aux_listPop(queue)
         node = queue.pop(0)
+        print(node.getCost())
         #current = node[1][len(node[1]) - 1]
 
         if end.isEqual(node):
@@ -95,14 +110,17 @@ def sc (graph,interface):
         #cost = node[0]
         node.setAsExpanded()
         for neighbor in graph.get_neighbors(node):
-            if not neighbor.isParent_of(node):
+            #if not neighbor.isParent_of(node):
+            if neighbor.isNew():
             #temp = node[1][:]
-                neighbor.setParent(node)
-                neighbor.setCost(node.getCost() + 1)
+
+                #neighbor.setValue(graph.n_of_new_Neighbors(neighbor))
+                neighbor.setParent(node,addParentCost=True)
                 queue.append(neighbor)
                 neighbor.setAsInlist()
 
         queue.sort(key=lambda no: no.getCost())
+        sleep(0.01)
         interface.updateScreen()
             #queue.put((cost + graph[current][neighbor], temp))
 

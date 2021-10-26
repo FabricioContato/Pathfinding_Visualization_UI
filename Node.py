@@ -5,7 +5,7 @@ class Node:
         self.cell = cell
        # self.coordinates = coordinates
         self.value = value
-        self.cost = 0
+        self.cost = cell.getCost()
         self.name = ""
         self.parent = None
 
@@ -16,7 +16,12 @@ class Node:
         return self.cell
 
     def getValue(self):
-        return self.getValue
+        return self.value
+
+    #def getCost(self):
+
+    def setValue(self,value):
+        self.value = value
 
     def getName(self):
         return self.name
@@ -30,8 +35,10 @@ class Node:
     def getParent(self):
         return self.parent
 
-    def setParent(self, parent):
+    def setParent(self, parent, addParentCost = False):
         self.parent = parent
+        if addParentCost:
+            self.setCost(self.getCost() + parent.getCost())
 
     def setAsExpanded(self):
         self.cell.setStateAsExpanded()

@@ -165,6 +165,13 @@ class Matrix:
     def getEnd_node(self):
         return Node(self.end_cell)
 
+    def set_cost(self,n):
+        point = pygame.mouse.get_pos()
+        j = point[0] // self.cell_width
+        i = point[1] // self.cell_height
+        cell = self.matrix[i][j]
+        cell.setCost(n)
+
     def heuristic_euclidean_distance(self, node):
         end_j = self.end_cell.getCell_point_place()[0] // self.cell_width
         end_i = self.end_cell.getCell_point_place()[1] // self.cell_height
@@ -223,11 +230,53 @@ class Matrix:
 
         return neighbors
 
+    def n_of_new_Neighbors(self,node):
+        j = node.getCell().getCell_point_place()[0] // self.cell_width
+        i = node.getCell().getCell_point_place()[1] // self.cell_height
+
+        number = 0
+
+        if self.inboundaries(i+1,j):
+            up_neighbor = self.matrix[i+1][j]
+            if up_neighbor.isStateAccessible():
+                #up_neighbor.setStateAsExpanded()
+                #self.blitCell(up_neighbor
+                #self.to_be_bleated.append(up_neighbor)
+                number = number + 1
+
+
+        if self.inboundaries(i-1,j):
+            down_neighbor = self.matrix[i-1][j]
+            if down_neighbor.isStateAccessible():
+                #down_neighbor.setStateAsExpanded()
+                #self.blitCell(down_neighbor)
+                #self.to_be_bleated.append(down_neighbor)
+                number = number + 1
+
+        if self.inboundaries(i,j-1):
+            left_neighbor = self.matrix[i][j-1]
+            if left_neighbor.isStateAccessible():
+                #left_neighbor.setStateAsExpanded()
+                #self.blitCell(left_neighbor)
+                #self.to_be_bleated.append(left_neighbor)
+                number = number + 1
+
+        if self.inboundaries(i,j+1):
+            right_neighbor = self.matrix[i][j+1]
+            if right_neighbor.isStateAccessible():
+                #right_neighbor.setStateAsExpanded()
+                #self.blitCell(right_neighbor)
+                #self.to_be_bleated.append(right_neighbor)
+                number = number + 1
+
+        return number
+
     def reset(self):
         for i in range(self.matrix_rows):
             for j in range(self.matrix_columns):
                 cell = self.matrix[i][j]
                 cell.setStateAsAccessible()
+                cell.setCost(1)
 
         self.start_node = None
         self.end_node = None

@@ -18,6 +18,7 @@ OUTLINE_GRAY = (65,65,65)
 RED = (255,0,0)
 GREEN = (0,255,0)
 PINK = (255,0,255)
+WHITE =(255,255,255)
 
 THICKNESS = 2
 
@@ -28,6 +29,7 @@ class Cell:
         self.surface = pygame.Surface(cell_dimension)
         self.rect = pygame.Rect(cell_point_place,cell_dimension)
         self.state = state
+        self.cost = 1
         self.expanded_counter = 0
         self.inList_counter = 0
         #self.pastState = None
@@ -39,6 +41,14 @@ class Cell:
 
     def getState(self):
         return self.state
+
+    def getCost(self):
+        return self.cost
+
+    def setCost(self, cost):
+        self.cost = cost
+        self.updateSprite()
+        self.updateMatrix()
 
     def expanded_counter_up(self):
         self.expanded_counter = self.expanded_counter + 1
@@ -102,6 +112,8 @@ class Cell:
             self.number_blit(self.getExpanded_counter())
         elif self.isStateInlist() and self.getInList_counter() > 1:
             self.number_blit(self.getInList_counter())
+        elif self.isStateAccessible() and self.getCost() != 1:
+            self.number_blit(self.getCost(),color = WHITE)
 
         self.line_square()
 
@@ -221,10 +233,10 @@ class Cell:
     def isStateSelected(self):
         return self.state == SELECTED
 
-    def number_blit(self, number):
+    def number_blit(self, number, color = PINK):
         font_size = min(self.cell_dimension[0],self.cell_dimension[1])
         font = pygame.font.Font(None, font_size)
-        text = font.render("{}".format(number), 1, PINK)
+        text = font.render("{}".format(number), 1, color)
         self.surface.blit(text, (5, 3))
 
     def line_square(self, color=OUTLINE_GRAY):
