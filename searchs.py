@@ -37,6 +37,60 @@ def ds(graph, interface):
 
 
     return None
+    
+def ds2(graph, interface):
+    stack = []
+    start_node = graph.getStart_node()
+    end_node = graph.getEnd_node()
+    stack.append(start_node)
+
+    while(stack):
+
+        node = stack.pop()
+
+        if end_node.isEqual(node):
+            print("end node found")
+            return node
+        else:
+            node.setAsExpanded()
+            neighbors_list = graph.get_neighbors(node)
+            for neighbor in neighbors_list:
+                if not neighbor.isExpanded():
+                    neighbor.setParent(node)
+                    neighbor.setAsInlist()
+                    stack.append(neighbor)
+        sleep(0.01)
+        interface.updateScreen()
+
+
+    return None
+    
+def ds3(graph, interface):
+    stack = []
+    start_node = graph.getStart_node()
+    end_node = graph.getEnd_node()
+    stack.append(start_node)
+
+    while(stack):
+
+        node = stack.pop()
+
+        if end_node.isEqual(node):
+            print("end node found")
+            return node
+        else:
+            node.setAsExpanded()
+            neighbors_list = graph.get_neighbors(node)
+            for neighbor in neighbors_list:
+                if not neighbor.isParent_of(node):
+                    neighbor.setParent(node)
+                    neighbor.setAsInlist()
+                    stack.append(neighbor)
+        sleep(0.01)
+        interface.updateScreen()
+
+
+    return None
 
 def ws(graph,interface):
     queue = []
@@ -58,6 +112,60 @@ def ws(graph,interface):
             for neighbor in neighbors_list:
                 #if neighbor.isNew():
                 if  neighbor.isNew():
+                    neighbor.setParent(node)
+                    neighbor.setAsInlist()
+                    queue.append(neighbor)
+        sleep(0.01)
+        interface.updateScreen()
+
+    return None
+    
+def ws2(graph,interface):
+    queue = []
+    start_node = graph.getStart_node()
+    end_node = graph.getEnd_node()
+
+    queue.append(start_node)
+
+    while(queue):
+
+        node = queue.pop(0)
+
+        if end_node.isEqual(node):
+            print("end node found")
+            return node
+        else:
+            node.setAsExpanded()
+            neighbors_list = graph.get_neighbors(node)
+            for neighbor in neighbors_list:
+                if not neighbor.isExpanded():
+                    neighbor.setParent(node)
+                    neighbor.setAsInlist()
+                    queue.append(neighbor)
+        sleep(0.01)
+        interface.updateScreen()
+
+    return None
+    
+def ws3(graph,interface):
+    queue = []
+    start_node = graph.getStart_node()
+    end_node = graph.getEnd_node()
+
+    queue.append(start_node)
+
+    while(queue):
+
+        node = queue.pop(0)
+
+        if end_node.isEqual(node):
+            print("end node found")
+            return node
+        else:
+            node.setAsExpanded()
+            neighbors_list = graph.get_neighbors(node)
+            for neighbor in neighbors_list:
+                if not neighbor.isParent_of(node):
                     neighbor.setParent(node)
                     neighbor.setAsInlist()
                     queue.append(neighbor)
@@ -127,6 +235,10 @@ def sc (graph,interface):
 
 
 
-search_dic = {0:(ds,'Deep Search'),
-              1:(ws,'Wide Search'),
-              2:(sc,'Cost Search ')}
+search_dic = {0:(ds,'Deep Search (just new nodes)'),
+              1:(ds2,'Deep Search (no expanded nodes)'),
+              2:(ds3,'Deep Search (no parent)'),
+              3:(ws,'Wide Search (just new nodes)'),
+              4:(ws2,'Wide Search (no expanded nodes)'),
+              5:(ws3,'Wide Search (no parent)'),
+              6:(sc,'Cost Search ')}
