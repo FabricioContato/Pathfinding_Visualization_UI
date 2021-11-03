@@ -49,6 +49,9 @@ class Node:
     def setAsPath(self):
         self.cell.setStateAsPath()
 
+    def setAsAccessible(self):
+        self.cell.setStateAsAccessible()
+
     def isExpanded(self):
         return self.cell.isStateExpanded()
 

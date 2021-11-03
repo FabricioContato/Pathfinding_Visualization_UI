@@ -37,7 +37,7 @@ def ds(graph, interface):
 
 
     return None
-    
+
 def ds2(graph, interface):
     stack = []
     start_node = graph.getStart_node()
@@ -64,7 +64,7 @@ def ds2(graph, interface):
 
 
     return None
-    
+
 def ds3(graph, interface):
     stack = []
     start_node = graph.getStart_node()
@@ -119,7 +119,7 @@ def ws(graph,interface):
         interface.updateScreen()
 
     return None
-    
+
 def ws2(graph,interface):
     queue = []
     start_node = graph.getStart_node()
@@ -146,8 +146,9 @@ def ws2(graph,interface):
         interface.updateScreen()
 
     return None
-    
+
 def ws3(graph,interface):
+    #tests = 0
     queue = []
     start_node = graph.getStart_node()
     end_node = graph.getEnd_node()
@@ -157,20 +158,26 @@ def ws3(graph,interface):
     while(queue):
 
         node = queue.pop(0)
-
+        print(len(queue))
+        #tests = tests + 1
+        #print(tests)
         if end_node.isEqual(node):
             print("end node found")
             return node
         else:
             node.setAsExpanded()
+           # if node.getParent() != None:
+           #     node.getParent().setAsAccessible()
             neighbors_list = graph.get_neighbors(node)
             for neighbor in neighbors_list:
+                #if True:
                 if not neighbor.isParent_of(node):
                     neighbor.setParent(node)
                     neighbor.setAsInlist()
                     queue.append(neighbor)
-        sleep(0.01)
+        #sleep(0.01)
         interface.updateScreen()
+        #node.setAsAccessible()
 
     return None
 
@@ -232,13 +239,79 @@ def sc (graph,interface):
         interface.updateScreen()
             #queue.put((cost + graph[current][neighbor], temp))
 
+def buscaGulosa(graph, interface):
+    stack = []
+    start_node = graph.getStart_node()
+    end_node = graph.getEnd_node()
+    stack.append(start_node)
+
+    while(stack):
+
+        node = stack.pop()
+
+        if end_node.isEqual(node):
+            print("end node found")
+            return node
+        else:
+            node.setAsExpanded()
+            neighbors_list = graph.get_neighbors(node)
+            for neighbor in neighbors_list:
+                if neighbor.isNew():
+                    neighbor.setParent(node)
+                    value = graph.heuristic_euclidean_distance(node)
+                    neighbor.value = value
+                    neighbor.setAsInlist()
+                    stack.append(neighbor)
+        stack.sort(key = lambda node: node.value, reverse=True)
+        sleep(0.01)
+        interface.updateScreen()
 
 
+    return None
 
-search_dic = {0:(ds,'Deep Search (just new nodes)'),
-              1:(ds2,'Deep Search (no expanded nodes)'),
-              2:(ds3,'Deep Search (no parent)'),
-              3:(ws,'Wide Search (just new nodes)'),
-              4:(ws2,'Wide Search (no expanded nodes)'),
-              5:(ws3,'Wide Search (no parent)'),
-              6:(sc,'Cost Search ')}
+
+def Astar(graph, interface):
+    lis = []
+    start_node = graph.getStart_node()
+    end_node = graph.getEnd_node()
+
+    lis.append(start_node)
+
+    while(lis):
+
+        node = lis.pop()
+
+        if end_node.isEqual(node):
+            return node
+        else:
+            node.setAsExpanded()
+            neighbors_list = graph.get_neighbors(node)
+            for neighbor in neighbors_list:
+                if neighbor.isNew():
+                #if not neighbor.isParent_of(node):
+                    neighbor.setParent(node,addParentCost=True)
+                    value = graph.heuristic_euclidean_distance(node)
+                    neighbor.value = value
+                    neighbor.setAsInlist()
+                    lis.append(neighbor)
+
+            lis.sort(key = lambda node: sum([node.getCost(),node.getValue()]), reverse=True)
+            sleep(0.01)
+            interface.updateScreen()
+
+search_dic = {0:(ds2,'Deep Search'),
+              1:(ws,'Wide Search'),
+              2:(sc,'Uniform Cost Search'),
+              3:(buscaGulosa,'Greedy Search'),
+              4:(Astar,"A*")}
+
+
+#search_dic = {0:(ds,'Deep Search (just new nodes)'),
+#              1:(ds2,'Deep Search (no expanded nodes)'),
+#              2:(ds3,'Deep Search (no parent)'),
+#              3:(ws,'Wide Search (just new nodes)'),
+#              4:(ws2,'Wide Search (no expanded nodes)'),
+#              5:(ws3,'Wide Search (no parent)'),
+#              6:(sc,'Cost Search '),
+#              7:(buscaGulosa,"greedy search"),
+#              8:(Astar,"A*")}

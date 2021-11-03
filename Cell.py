@@ -120,12 +120,11 @@ class Cell:
     def updateState(self, state):
         if not (self.isStateEnd() or self.isStateStart()):
             self.state = state
+            self.updateSprite()
+            self.updateMatrix()
         else:
-            if state == ACCESSIBLE:
+            if state == ACCESSIBLE or state == EXPANDED:
                 self.state = state
-
-        self.updateSprite()
-        self.updateMatrix()
 
 
 
